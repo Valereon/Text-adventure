@@ -151,6 +151,7 @@ if advNorth == True:
         
 while town:
     print("Test")
+    print("Test2")
         
         
         
