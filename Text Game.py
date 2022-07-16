@@ -1,8 +1,11 @@
 import os
 import random
+
 import time
 import math
-
+from unittest import result
+import decsions
+from decsions import *
 
 
 
@@ -45,6 +48,46 @@ dmg = 1
 def clear():
     os.system("cls")
 
+
+    
+        
+def encounter():
+    mathencounter = 3
+    if mathencounter == 10:
+        pass
+    if mathencounter == 9:
+        pass
+    if mathencounter == 8:
+        pass
+    if mathencounter == 7:
+        pass
+    if mathencounter == 6:
+        pass
+    if mathencounter == 5:
+        pass
+    if mathencounter == 4:
+        pass
+        
+    
+    if mathencounter == 3:
+        adventure = False
+        d3 = decsions.decsion("on your travels you stumble upon a cave do you enter?", "1. Yes", "2. No")
+        result3 = d3.pts
+        
+        if d3 == "1":
+            d3_1_1 = decsions.decsion.pts("As you walk into the cave you encounter a horde of monsters! do you fight or runaway?", "1. Fight", "2. Run Away")
+            
+            
+        if d3 == "2":
+            adventure = True
+            
+    if mathencounter == 2:
+        pass
+    if mathencounter == 1:
+        pass
+    
+         
+
 #Main Menu
 while mainmenu:
     print("Welcome to Python Text Based Adventure")
@@ -57,6 +100,7 @@ while mainmenu:
     if menuinput == "1":
         home = True
         mainmenu = False
+       
     elif menuinput == "2":
         print("Creator: Max Warren")
         print("Coder: Max Warren")
@@ -77,63 +121,10 @@ while home:
     homeinput = input("# ")
     clear()
     
-    
-    
-    #Adventuring
-def begginingAdventure():
-    if adventure == True:
-        print("1. Go North")
-        print("2. Go South")
-        print("3. Go East")
-        print("4. Go West")
-        advinput = input("# ")
-        clear()
-    
-    if advinput == "1":
-        advNorth = True
-        adventure = False
-        print("you decided to go North")
-    if advinput == "2":
-        advSouth = True
-        adventure = False
-        print("you decided to go South")
-    if advinput == "3":
-        advEast = True
-        adventure = False
-        print("you decided to go East")
-    if advinput == "4":
-        advWest = True
-        adventure = False
-        print("you decided to go West")
-    else:
-        print("invalid input")
-        begginingAdventure()
-        clear()
-        
-        
-    
-if advNorth == True:
-    print("while traveling north you come a across a Cave \n do you go in the cave? or do you pass by it?")
-    print("1. Enter the Cave")
-    print("2. Pass the Cave")
-    northinp = input("# ")
-    clear()
-    
-    if northinp == "1":
-        
-        print("You enter the cave and ")
-    if northinp == "2":
-        print("You go around the cave and you come to a fork \n do you go left or right?")
-    
-    
-    
-    
-    
-    #Home Choices
+#Home Choices
     if homeinput == "1":
         adventure = True
         home = False
-        begginingAdventure()
     if homeinput == "2" and anvil == True:
         pass
     elif homeinput == "2" and anvil == False:
@@ -147,12 +138,48 @@ if advNorth == True:
     elif homeinput == "4" and chest == False:
         print("You havent unlocked that yet")
     if homeinput == "5":
-        town = True
+        town = True    
+    
+
+    
+    #Adventuring
+    while adventure == True:
+        print("1. Go North")
+        print("2. Go South")
+        print("3. Go East")
+        print("4. Go West")
+        advinput = input("# ")
+        clear()
+    
+        if advinput == "1":
+            print("you decided to go North") 
+            encounter()
+        elif advinput == "2":           
+            print("you decided to go South")
+            encounter()
+        elif advinput == "3":         
+            print("you decided to go East")
+            encounter()
+        elif advinput == "4":
+            print("you decided to go West")
+            encounter()
+        else:
+            clear()
+            print("invalid input")
+       
+        
+
+    
+    
+    
+    
         
 while town:
     print("Test")
         
-        
+
+
+
         
         
 
