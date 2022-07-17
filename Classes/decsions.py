@@ -13,6 +13,7 @@ class decsion:
         print(self.choice2)    
         decinput = input("# ")
         return decinput
+
         
         
           
