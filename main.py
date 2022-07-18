@@ -1,8 +1,11 @@
 
 import os
 import random
+from re import X
 import time
 import math
+from os.path import exists
+from termcolor import colored
 
 
 
@@ -10,8 +13,7 @@ import math
 from Classes.decsions import decsion
 from Classes.enemy import monster
 from Classes.human import player
-
-
+from Classes.Loot import *
 
 
 #Main Gamemodes
@@ -44,11 +46,14 @@ generator = False
 
 #Stats
 usedskillpoints = 0
-unusedskillpoints = 1
+unusedskillpoints = 0
 playerLvl = 1
 xp = 0
 maxLevel = 50
 xpNeeded4NextLevel = 10    
+    
+
+    
     
 #declaring the  player    
 player1 = player()    
@@ -67,7 +72,7 @@ def levelUp():
         
 #the skillpoint upgrade screen        
 def skillPointScreen():
-    global unusedskillpoints
+    global unusedskillpoints, home
     while skillPointScreen:
         clear()
         print("You Have " + str(unusedskillpoints) + " Unused Skillpoints!")
@@ -95,7 +100,10 @@ def skillPointScreen():
                 unusedskillpoints -= 1
                 continue
         if skillpointinput == "x":
-                profile()
+                home = True
+                return
+                
+                
 
 def inventoryScreen():
     player1.openInventory()
@@ -106,27 +114,56 @@ def equippedScreen():
     pass
 
 def profile():
-    print(str(player1.maxhealth) + " Max Health")
-    print(str(player1.health) + " Health")
-    print(str(player1.attack) + " Attack")
-    print(str(player1.defense) + " Defense")
-    print(str(player1.luck) + " Luck")
-    print("")
-    print("1. Open Skill Menu")
-    print("2. Open Your Inventory")
-    print("3. Open Your Equipped")
-    profileMenuInput = input("# ")
-    clear()
-    
-    if profileMenuInput == "1":
-        skillPointScreen()    
-    if profileMenuInput == "2":
-        inventoryScreen()
-    if profileMenuInput == "3":
-        equippedScreen()
+    global home
+    while profile:
+        print(str(player1.maxhealth) + " Max Health")
+        print(str(player1.health) + " Health")
+        print(str(player1.attack) + " Attack")
+        print(str(player1.defense) + " Defense")
+        print(str(player1.luck) + " Luck")
+        print("")
+        print("1. Open Skill Menu")
+        print("2. Open Your Inventory")
+        print("3. Open Your Equipped")
+        profileMenuInput = input("# ")
+        clear()
+
+        if profileMenuInput == "1":
+            skillPointScreen()    
+        if profileMenuInput == "2":
+            inventoryScreen()
+        if profileMenuInput == "3":
+            equippedScreen()
+        if profileMenuInput == "x":
+            home = True
+            return
+            
+        
+        
         
     
-        
+def save():
+    file_exists = exists("Save.txt")
+    if file_exists == True:
+        saveList = [
+            str(playerLvl),
+            str(xp),
+            str(xpNeeded4NextLevel),
+            str(player1.maxhealth),
+            str(player1.health),
+            str(player1.attack),
+            str(player1.defense),
+            str(player1.luck),
+            str(unusedskillpoints)
+        ]   
+        saveFile = open("Save.txt", "w")
+        for item in saveList:
+            saveFile.write(item + "\n")
+        saveFile.close    
+    if file_exists == False:
+        saveFile = open("Save.txt", "x")
+        print("Save File Created. Save Again To save your progress!")
+    
     
     
         
@@ -148,7 +185,7 @@ def deathscreen():
     
 #the battling function
 def fight():
-    global adventure, xp, xpNeeded4NextLevel, playerLvl
+    global adventure, xp, xpNeeded4NextLevel, playerLvl, monster1
     battle = True
     monster1 = monster(playerLvl)
     monster1.statreset()
@@ -176,6 +213,7 @@ def fight():
                 monster1.statincrease(playerLvl)
                 print("You win!")
                 print("You Gained " + str(monster1.xp) + " Exp")
+                print(monster1.monsterDrops())
                 if xp >= xpNeeded4NextLevel:
                     levelUp()
                     print("You Leveled up! You are now Level", playerLvl)
@@ -358,17 +396,38 @@ while mainmenu:
     print("4. Exit")
     menuinput = input("# ")
     clear()
+    
 #main menu choices
     if menuinput == "1":
         home = True
         mainmenu = False
-        if saveCreated == False:
-            save = open("Save.txt", "x")
-        elif saveCreated == True:
-            save = open("Save.txt")
+        
         
     elif menuinput == "2":
-        pass
+        try:
+            saveFile = open("Save.txt")
+            loadList = saveFile.readlines()
+            if len(loadList) == 9:
+                playerLvl  = int(loadList[0][:-1])
+                xp = int(loadList[1][:-1])
+                xpNeeded4NextLevel = int(loadList[2][:-1])
+                player1.maxhealth = int(loadList[3][:-1])
+                player1.health = int(loadList[4][:-1])
+                player1.attack = int(loadList[5][:-1])
+                player1.defense = int(loadList[6][:-1])
+                player1.luck = int(loadList[7][:-1])
+                unusedskillpoints = int(loadList[8][:-1])
+                home = True
+                mainmenu = False
+            else:
+                print("Save Is corrupted")
+                input("> ")
+        except OSError:
+            print("No loadable file!")
+            input("> ")
+            
+                
+            
     elif menuinput == "3":
         print("Creator: Max Warren")
         print("Coder: Max Warren")
@@ -386,6 +445,10 @@ while home:
         print("4. Open your chest")
     print("5. Go to Town")
     print("6. Open your Profile")
+    print("7. Save")
+    
+    
+    
     if unusedskillpoints >= 1:
         print("You have " + str(unusedskillpoints) + " Unused Skillpoints!")
     homeinput = input("# ")
@@ -411,6 +474,11 @@ while home:
         town = True    
     if homeinput == "6":
             profile()
+    if homeinput == "7":
+        save()
+    if homeinput == "x":
+        mainmenu = True
+        house = False
 
     
     #Adventuring

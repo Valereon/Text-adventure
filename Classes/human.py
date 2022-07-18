@@ -1,6 +1,6 @@
 
 
-from numpy import number
+
 
 
 class player:
@@ -28,7 +28,7 @@ class player:
         
     def addItemToInventory(self, itemName):
         self.inventorymethod()
-        self.inventory.append()
+        self.inventory.append(itemName)
     
     def openInventory(self):
         self.inventorymethod()

@@ -1,8 +1,6 @@
 import random
 
-
-
-
+from .human import *
 class monster:
     def __init__(self, playerLvl):
         self.health = playerLvl + random.randint(1, 15)
@@ -20,5 +18,24 @@ class monster:
         self.health = self.maxhealth
     
     def monsterDrops(self):
-        pass
+        
+        lootDrops = [
+            ["Limb", "Guts", "Fang", "Horn", "Eye", "Iron Nugget", "Stick", "Rock", "Scale", "Claw"],
+            ["Dagger", "Sword", "Iron Ingot", "Gold", "Silver", "Spear", "Mace"],
+            ["Ring Of Life", "Ring of Thunder", "Potion", "Amulet of Protection"]
+        ]
+        
+        lootListSelection = random.choices(lootDrops, weights=[60, 30, 10], k=1)   
+        
+        lootDropsLen = len(lootDrops)  
+
+        lootDecsion2 = lootListSelection[0][random.randint(0, lootDropsLen-1)]
+        player1 = player()
+        player1.addItemToInventory(lootDecsion2)
+
+        
+ 
+        
+        print(lootDecsion2)
+        
         
