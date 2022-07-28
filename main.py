@@ -1,23 +1,20 @@
-
 import os
 import random
-from re import X
-import time
-import math
 from os.path import exists
-from termcolor import colored
-
-
-
+from getch import pause
 
 from Classes.decsions import decsion
 from Classes.enemy import monster
 from Classes.human import player
 from Classes.Loot import *
+from Classes.selectorMenus import menuInput
+from Classes.Map import *
+from Classes.Map import mapMovement
+
 
 
 #Main Gamemodes
-adventure = False
+
 home = False
 battle = False
 
@@ -57,7 +54,9 @@ xpNeeded4NextLevel = 10
     
 #declaring the  player    
 player1 = player()    
-
+mainmenu1 = menuInput()
+homemenu = menuInput()
+generalMenu = menuInput()
 #clears the screen
 def clear():
     os.system("cls")
@@ -154,7 +153,10 @@ def save():
             str(player1.attack),
             str(player1.defense),
             str(player1.luck),
-            str(unusedskillpoints)
+            str(unusedskillpoints),
+            str(y),
+            str(x)
+            
         ]   
         saveFile = open("Save.txt", "w")
         for item in saveList:
@@ -185,7 +187,7 @@ def deathscreen():
     
 #the battling function
 def fight():
-    global adventure, xp, xpNeeded4NextLevel, playerLvl, monster1
+    global xp, xpNeeded4NextLevel, playerLvl, monster1
     battle = True
     monster1 = monster(playerLvl)
     monster1.statreset()
@@ -208,7 +210,6 @@ def fight():
             monster1.health -= player1.attack
             if monster1.health <= 0:
                 battle = False
-                adventure = True
                 xp += monster1.xp
                 monster1.statincrease(playerLvl)
                 print("You win!")
@@ -222,7 +223,7 @@ def fight():
                 #print(loot)
                 input("# ")
                 battle = False
-                adventure = True
+               
         if attackinput == "2":
             pass
         if attackinput == "3":
@@ -230,7 +231,7 @@ def fight():
         if attackinput == "4":
             fleechance = random.randint(1,100)
             if fleechance <= 25:
-                adventure = True
+               
                 battle = False
 
        
@@ -269,8 +270,8 @@ def fight():
 
 
        #story encounters when your picking your direction 
-def encounter():
-    global home, adventure
+
+    global home
     mathencounter = 3 #random.randint(1,10)
     if mathencounter == 10:
         d10 = decsion("You found Home!", "1. Enter your house", "2. continue adventuring")
@@ -279,131 +280,24 @@ def encounter():
         
         if result10 == "1":
             home = True
-            adventure = False
         if result10 == "2":
-            adventure = True
+            pass
         
-        
-    if mathencounter == 9:
-        pass
-    if mathencounter == 8:
-        pass
-    if mathencounter == 7:
-        pass
-    if mathencounter == 6:
-        pass
-    if mathencounter == 5:
-        pass
-    if mathencounter == 4:
-        pass
-        
-    
-    if mathencounter == 3:
-        adventure = False
-        d3 = decsion("on your travels you stumble upon a cave do you enter?", "1. Yes", "2. No")
-        result3 = d3.pts()
-        
-        if result3 == "1":
-            clear()
-            d3_1_1 = decsion("As you walk into the cave you encounter a horde of monsters! do you fight or runaway?", "1. Fight", "2. Run Away")
-            result3_1 = d3_1_1.pts()
-            
-            
-            if result3_1 == "1":
-                clear()
-                fight()
-                #fight the monsters
-                pass
-            
-            if result3_1 == "2":
-                clear()
-                d3_2_2 = decsion("You run off the right deeper into the cave and come across a fork", "1. Go Left", "2. Go Right")
-                result3_2 = d3_2_2.pts()
-                
-                if result3_2 == "1":
-                    clear()
-                    print("You found a chest with lots of loot in it the loot is") # make chest loot here
-                    
-                if result3_2 == "2":
-                    clear()
-                    d3_3_2 = decsion("you go right and you find a chest guarded by monsters", "1. Fight", "2. Accept your fate")
-                    result3_3 = d3_3_2.pts()
-                    
-                    if result3_3 == "1":
-                       clear()
-                       fight()
-                    
-                    if result3_3 == "2":
-                        deathscreen()  
-            
-        if result3 == "2":
-            adventure = True
-            
-    if mathencounter == 2:
-        clear()
-        d2 = decsion("as your walking along you stumble across a beached boat do you enter?", "1. Yes", "2. No")
-        result2 = d2.pts()
-        
-        if result2 == "1":
-            clear()
-            d2 = decsion("You enter the boat and you see a group of skeletons sitting around a fire what do you do?", "1. Attack them", "2. Chat with them" )
-            result2 = d2.pts()
-            
-            if result2 == "1":
-                clear()
-                fight()
-                #attack here
-                
-            if result2 == "2":
-                clear()
-                d2 = decsion("you apporach the group of skeletons with a swagger and they seem to vibe with it one gets up and stares you in the eyes what do you do?", "1. dance battle", "2. rap battle")
-                result2 = d2.pts()
-                
-                if result2 == "1":
-                    clear()
-                    d2 = decsion("you start BUSTING A MOVE as hard as you can the skeleton dosent even miss a beat he starts Breakdancing and the others start cheering it seems like they are cheering for you more", "1. do a flip", "2. Stop and ask for a large sum of cash")
-                    result2 = d2.pts()
-                    if result2 == "1":
-                        clear()
-                        d2 = decsion("You execute a perfect backflip and blow away the crowd", "1. ask for the chest in the back", "2. leave with their thanks")
-                        result2 = d2.pts()
-                        
-                        if result2 == "1":
-                            pass
-                        if result2 == "2":
-                            pass
-                    if result2 == "2":
-                        pass
-                        
-                if result2 == "2":
-                    clear()
-                    d2 = decsion("you start rapping harder than eminem and they are impressed, the one in front of you dosent even blink before he starts rapping 1000x faster than you. Its barely comprehendable what do you do?", "1. rap faster", "2. start breakdancing")
-                    result2 = d2.pts()
-                    
-        if result2 == "2":
-            adventure = True
-    if mathencounter == 1:
-        pass
-    
-         
 
 #Main Menu
 while mainmenu:
-    print("Welcome to Python Text Based Adventure")
-    print("1. New Game")
-    print("2. Load Game")
-    print("3. Credits")
-    print("4. Exit")
-    menuinput = input("# ")
-    clear()
+    def printMainMenu():
+        global mainMenuResult1
+        mainMenuResult1 = mainmenu1.write(["Welcome to Not another text adventure!", "New Game", "Load Game", "Credits", "Quit"], "H:\\Github\\GitHub\\Text-adventure\\soundEffectsAndMusic\\menuselect.wav")
+    printMainMenu()    
     
-#main menu choices
-    if menuinput == "1":
+    
+        #main menu choices
+    if mainMenuResult1 == 1:
         home = True
         mainmenu = False
         
-        
-    elif menuinput == "2":
+    elif mainMenuResult1 == 2:
         try:
             saveFile = open("Save.txt")
             loadList = saveFile.readlines()
@@ -426,88 +320,55 @@ while mainmenu:
             print("No loadable file!")
             input("> ")
             
-                
-            
-    elif menuinput == "3":
+    elif mainMenuResult1 == 3:
         print("Creator: Max Warren")
         print("Coder: Max Warren")
-    elif menuinput == "4":
+        printMainMenu()
+    elif mainMenuResult1 == 4:
         quit()
 #Home
 while home:
-    print("This is your home!")
-    print("1. Go out Adventuring")
-    if anvil == True:
-        print("2. Use your anvil")
-    if forge == True:    
-        print("3. Use your forge")
-    if chest == True:
-        print("4. Open your chest")
-    print("5. Go to Town")
-    print("6. Open your Profile")
-    print("7. Save")
-    
-    
+    def printHomeMenu():
+        global homeMenuResult
+        homeMenuResult = homemenu.write(["This is your home!", "Go out adventuring", "use your anvil", "use your forge", "open your chest", "go to town", "open your profile", "Save"], "H:\\Github\\GitHub\\Text-adventure\\soundEffectsAndMusic\\menuselect.wav")  
+    printHomeMenu()
+    pause("Press w or s to move up or down!")
     
     if unusedskillpoints >= 1:
         print("You have " + str(unusedskillpoints) + " Unused Skillpoints!")
-    homeinput = input("# ")
-    clear()
     
 #Home Choices
-    if homeinput == "1":
-        adventure = True
-        home = False
-    if homeinput == "2" and anvil == True:
+    if homeMenuResult == 1:
+        result = mapMovement()
+    if homeMenuResult == 2 and anvil == True:
         pass
-    elif homeinput == "2" and anvil == False:
+    elif homeMenuResult == 2 and anvil == False:
         print("You havent unlocked that yet")
-    if homeinput == "3" and forge == True:
+        printHomeMenu()
+    if homeMenuResult == 3 and forge == True:
         pass
-    elif homeinput == "3" and forge == False:
+    elif homeMenuResult == 3 and forge == False:
         print("You havent unlocked that yet")
-    if homeinput == "4" and chest == True:
+        printHomeMenu()
+    if homeMenuResult == 4 and chest == True:
         pass
-    elif homeinput == "4" and chest == False:
+    elif homeMenuResult == 4 and chest == False:
         print("You havent unlocked that yet")
-    if homeinput == "5":
+        printHomeMenu()
+    if homeMenuResult == 5:
         town = True    
-    if homeinput == "6":
+    if homeMenuResult == 6:
             profile()
-    if homeinput == "7":
+    if homeMenuResult == 7:
         save()
-    if homeinput == "x":
-        mainmenu = True
-        house = False
+        printHomeMenu()
 
+  
     
-    #Adventuring
-    while adventure:
-        print("1. Go North")
-        print("2. Go South")
-        print("3. Go East")
-        print("4. Go West")
-        advinput = input("# ")
-        clear()
-    
-        if advinput == "1":
-            print("you decided to go North") 
-            encounter()
-        elif advinput == "2":           
-            print("you decided to go South")
-            encounter()
-        elif advinput == "3":         
-            print("you decided to go East")
-            encounter()
-        elif advinput == "4":
-            print("you decided to go West")
-            encounter()
-        else:
-            clear()
-            print("invalid input")
-       
+
         
-
+        
+    
 
     
     
